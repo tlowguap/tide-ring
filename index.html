@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Tide Ring · Salty Dog Retreats</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="theme-color" content="#E6F3F8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400&family=Karla:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0F323F; --ink-2:#446B79; --ink-3:#83A2AD;
+  --paper:#F4FAFC; --paper-2:#D8EBF3;
+  --lagoon:#7CC3D6; --lagoon-2:#3F92AC; --lagoon-3:#276579;
+  --shell:rgba(255,255,255,.72);
+  --line:rgba(39,101,121,.15);
+  --shadow:0 10px 30px rgba(15,50,63,.07);
+  --display:"Fraunces",Georgia,serif;
+  --body:"Karla",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:var(--body);color:var(--ink);min-height:100vh;
+  background:linear-gradient(180deg,var(--paper),#E6F3F8 45%,var(--paper-2));background-attachment:fixed;
+  -webkit-user-select:none;user-select:none;touch-action:manipulation;
+  padding:0 clamp(10px,2.2vw,28px) 24px;overflow-x:hidden}
+h1,h2{font-family:var(--display);font-weight:300;margin:0}
+.wrap{max-width:1280px;margin:0 auto}
+
+header{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:12px 2px 4px}
+.brand{display:flex;align-items:center;gap:11px;margin-right:auto}
+.brand h1{font-size:clamp(19px,2.1vw,25px);line-height:1.1}
+.brand .sub{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3)}
+.tuning{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--lagoon-3);
+  border:1px solid var(--line);background:var(--shell);border-radius:999px;padding:8px 14px;box-shadow:var(--shadow)}
+.chipbox{display:flex;align-items:center;gap:9px;background:var(--shell);border:1px solid var(--line);
+  border-radius:999px;padding:6px 14px;box-shadow:var(--shadow)}
+.chipbox label{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
+.seg{display:flex;background:var(--shell);border:1px solid var(--line);border-radius:999px;padding:4px;box-shadow:var(--shadow)}
+.seg button{border:none;background:none;font-family:var(--body);font-size:11px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-2);padding:8px 13px;border-radius:999px;cursor:pointer}
+.seg button.on{background:var(--lagoon-2);color:#fff}
+input[type=range]{-webkit-appearance:none;appearance:none;width:96px;height:24px;background:transparent;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:5px;border-radius:99px;background:var(--lagoon);opacity:.6}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;
+  background:#fff;border:1.5px solid var(--lagoon-2);margin-top:-8.5px;box-shadow:0 3px 9px rgba(15,50,63,.18)}
+input[type=range]::-moz-range-track{height:5px;border-radius:99px;background:var(--lagoon);opacity:.6}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:1.5px solid var(--lagoon-2)}
+
+/* ---------- circle ---------- */
+.stage{position:relative;width:min(92vw,58vh,620px);aspect-ratio:1;margin:0 auto}
+.bowl{position:absolute;left:0;top:0;transform:translate(-50%,-50%);border-radius:50%;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;padding:0;overflow:hidden;
+  border:1px solid rgba(39,101,121,.22);box-shadow:0 8px 22px rgba(15,50,63,.09);
+  transition:transform .25s cubic-bezier(.3,1.4,.5,1),box-shadow .4s}
+.bowl:active{transform:translate(-50%,-50%) scale(.94)}
+.bowl .inner{width:86%;margin:0 auto;text-align:center;line-height:1.14}
+.bowl .n{font-family:var(--display);font-size:1em;display:block}
+.bowl .k{font-size:.76em;letter-spacing:.02em;color:var(--lagoon-3);margin-top:.32em;display:block;font-weight:500;white-space:nowrap}
+.bowl .hz{font-size:.58em;letter-spacing:.04em;opacity:.62;display:block;margin-top:.12em;white-space:nowrap}
+.bowl.ringing{box-shadow:0 0 0 2px var(--lagoon-2),0 12px 32px rgba(39,101,121,.22)}
+.ripple{position:absolute;border-radius:50%;border:1.5px solid var(--lagoon-2);
+  transform:translate(-50%,-50%) scale(.35);opacity:.55;pointer-events:none}
+@keyframes spread{to{transform:translate(-50%,-50%) scale(3.4);opacity:0}}
+.centre{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:27%;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;text-align:center;
+  background:rgba(255,255,255,.55);border:1px solid var(--line);box-shadow:var(--shadow)}
+.centre .big{font-family:var(--display);font-size:clamp(16px,2vw,23px);display:block;font-variant-numeric:tabular-nums}
+.centre .sm{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);margin-top:4px;display:block}
+
+/* ---------- gongs ---------- */
+.strikes{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin-top:12px;align-items:center}
+.gong{border:1px solid var(--line);background:var(--shell);box-shadow:var(--shadow);border-radius:18px;
+  padding:12px 20px;cursor:pointer;font-family:var(--body);color:var(--ink);display:flex;align-items:baseline;gap:9px}
+.gong .t{font-family:var(--display);font-size:16px}
+.gong .h{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.gong.ringing{border-color:var(--lagoon-2);box-shadow:inset 0 0 0 1px var(--lagoon-2),var(--shadow)}
+.gong.sampled .h{color:var(--lagoon-3)}
+.gong:active{transform:scale(.98)}
+
+/* ---------- recordings drawer ---------- */
+.recs{background:var(--shell);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);
+  padding:16px clamp(12px,2vw,20px);margin-top:10px;display:none}
+.recs.open{display:block}
+.recs h2{font-size:18px;margin-bottom:4px}
+.recs p.note{font-size:11.5px;color:var(--ink-3);line-height:1.65;margin:0 0 14px;max-width:78ch}
+.slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
+.slot{border:1px solid var(--line);background:rgba(255,255,255,.6);border-radius:14px;padding:11px 13px}
+.slot .sn{font-family:var(--display);font-size:15px}
+.slot .ss{font-size:10.5px;color:var(--ink-3);margin:3px 0 8px;min-height:1.3em}
+.slot .ss.ok{color:var(--lagoon-3)}
+.slot label{display:inline-block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--lagoon-3);border:1px solid var(--lagoon-2);border-radius:999px;padding:7px 13px;cursor:pointer}
+.slot input[type=file]{display:none}
+.slot button.clr{border:none;background:none;font-family:var(--body);font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3);cursor:pointer;margin-left:6px}
+
+/* ---------- console ---------- */
+.console{background:var(--shell);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);
+  padding:14px clamp(8px,1.6vw,18px) 12px;margin-top:12px;display:flex;gap:clamp(6px,1.2vw,16px);overflow-x:auto}
+.strip{flex:1 1 0;min-width:82px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.strip .cap{font-family:var(--display);font-size:14px;text-align:center;line-height:1.15;min-height:2.3em;
+  display:flex;align-items:center;justify-content:center;cursor:pointer}
+.col{position:relative;width:52px;height:clamp(110px,19vh,180px);border-radius:999px;overflow:hidden;
+  background:rgba(39,101,121,.07);border:1px solid var(--line);touch-action:none;cursor:ns-resize}
+.col .water{position:absolute;left:0;right:0;bottom:0;height:0%;
+  background:linear-gradient(180deg,rgba(124,195,214,.75),rgba(63,146,172,.9))}
+.col .line{position:absolute;left:5px;right:5px;height:2px;background:rgba(255,255,255,.85);border-radius:2px;transform:translateY(50%);bottom:0}
+.col .pc{position:absolute;left:0;right:0;bottom:7px;text-align:center;font-size:10.5px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.col.hot .pc{color:#fff}
+.hint{text-align:center;font-size:11.5px;color:var(--ink-3);margin:12px auto 0;line-height:1.7}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="brand">
+    <svg width="32" height="32" viewBox="0 0 64 64" fill="none" stroke="#3F92AC" stroke-width="1.6">
+      <circle cx="32" cy="32" r="30"/><path d="M8 27c5-5 9-5 14 0s9 5 14 0 9-5 14 0" stroke-linecap="round"/>
+      <path d="M8 37c5-5 9-5 14 0s9 5 14 0 9-5 14 0" stroke-linecap="round" opacity=".6"/></svg>
+    <div><div class="sub">Salty Dog Retreats</div><h1>Tide Ring</h1></div>
+  </div>
+  <span class="tuning">A = 432 Hz</span>
+  <div class="chipbox"><label for="master">Room</label><input type="range" id="master" min="0" max="100" value="80"></div>
+  <div class="chipbox"><label for="bedVol">Ambience</label><input type="range" id="bedVol" min="0" max="100" value="85"></div>
+  <div class="seg" id="octave"><button data-o="-1">Low</button><button data-o="0" class="on">Mid</button><button data-o="1">High</button></div>
+  <div class="seg"><button id="latch">Latch</button></div>
+  <div class="seg"><button id="awakeBtn" class="on">Keep awake</button></div>
+  <div class="seg"><button id="recsBtn">Recordings</button></div>
+  <div class="seg"><button id="allOff">Fade all out</button></div>
+</header>
+
+<video id="nosleep" muted playsinline loop disableremoteplayback style="position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;left:-10px;top:-10px" src="data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAM0bW9vdgAAAGxtdmhkAAAAAAAAAAAAAAAAAAAD6AAAD6AAAQAAAQAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAl50cmFrAAAAXHRraGQAAAADAAAAAAAAAAAAAAABAAAAAAAAD6AAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAEAAAABAAAAAAAAkZWR0cwAAABxlbHN0AAAAAAAAAAEAAA+gAAAAAAABAAAAAAHWbWRpYQAAACBtZGhkAAAAAAAAAAAAAAAAAABAAAABAABVxAAAAAAALWhkbHIAAAAAAAAAAHZpZGUAAAAAAAAAAAAAAABWaWRlb0hhbmRsZXIAAAABgW1pbmYAAAAUdm1oZAAAAAEAAAAAAAAAAAAAACRkaW5mAAAAHGRyZWYAAAAAAAAAAQAAAAx1cmwgAAAAAQAAAUFzdGJsAAAAuXN0c2QAAAAAAAAAAQAAAKlhdmMxAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAEAAQABIAAAASAAAAAAAAAABFUxhdmM2MC4zMS4xMDIgbGlieDI2NAAAAAAAAAAAAAAAGP//AAAAL2F2Y0MBQsAe/+EAF2dCwB7ZBCbARAAAAwAEAAADAAg8WLkgAQAFaMuDyyAAAAAQcGFzcAAAAAEAAAABAAAAFGJ0cnQAAAAAAAAFYgAABWIAAAAYc3R0cwAAAAAAAAABAAAABAAAQAAAAAAUc3RzcwAAAAAAAAABAAAAAQAAABxzdHNjAAAAAAAAAAEAAAABAAAABAAAAAEAAAAkc3RzegAAAAAAAAAAAAAABAAAApIAAAAKAAAACwAAAAoAAAAUc3RjbwAAAAAAAAABAAADZAAAAGJ1ZHRhAAAAWm1ldGEAAAAAAAAAIWhkbHIAAAAAAAAAAG1kaXJhcHBsAAAAAAAAAAAAAAAALWlsc3QAAAAlqXRvbwAAAB1kYXRhAAAAAQAAAABMYXZmNjAuMTYuMTAwAAAACGZyZWUAAAK5bWRhdAAAAnAGBf//bNxF6b3m2Ui3lizYINkj7u94MjY0IC0gY29yZSAxNjQgcjMxMDggMzFlMTlmOSAtIEguMjY0L01QRUctNCBBVkMgY29kZWMgLSBDb3B5bGVmdCAyMDAzLTIwMjMgLSBodHRwOi8vd3d3LnZpZGVvbGFuLm9yZy94MjY0Lmh0bWwgLSBvcHRpb25zOiBjYWJhYz0wIHJlZj0zIGRlYmxvY2s9MTowOjAgYW5hbHlzZT0weDE6MHgxMTEgbWU9aGV4IHN1Ym1lPTcgcHN5PTEgcHN5X3JkPTEuMDA6MC4wMCBtaXhlZF9yZWY9MSBtZV9yYW5nZT0xNiBjaHJvbWFfbWU9MSB0cmVsbGlzPTEgOHg4ZGN0PTAgY3FtPTAgZGVhZHpvbmU9MjEsMTEgZmFzdF9wc2tpcD0xIGNocm9tYV9xcF9vZmZzZXQ9LTIgdGhyZWFkcz0xIGxvb2thaGVhZF90aHJlYWRzPTEgc2xpY2VkX3RocmVhZHM9MCBucj0wIGRlY2ltYXRlPTEgaW50ZXJsYWNlZD0wIGJsdXJheV9jb21wYXQ9MCBjb25zdHJhaW5lZF9pbnRyYT0wIGJmcmFtZXM9MCB3ZWlnaHRwPTAga2V5aW50PTI1MCBrZXlpbnRfbWluPTEgc2NlbmVjdXQ9NDAgaW50cmFfcmVmcmVzaD0wIHJjX2xvb2thaGVhZD00MCByYz1jcmYgbWJ0cmVlPTEgY3JmPTIzLjAgcWNvbXA9MC42MCBxcG1pbj0wIHFwbWF4PTY5IHFwc3RlcD00IGlwX3JhdGlvPTEuNDAgYXE9MToxLjAwAIAAAAAaZYiEBf///w9FAAFXnycnJ1111111111114AAAAAGQZo4C/hGAAAAB0GaVALeEYAAAAAGQZpgFfCM"></video>
+
+<div class="stage" id="stage">
+  <div class="centre"><div><span class="big" id="clock">0:00</span><span class="sm">Session</span></div></div>
+</div>
+
+<div class="strikes" id="strikes"></div>
+
+<section class="recs" id="recs">
+  <h2>Real recordings</h2>
+  <p class="note">The three gongs and the wind chimes play real recordings built into this file. Load your own here to replace any of them, or to give the bells and chimes real recordings too — a single clean strike per file works best, and the app varies pitch and level slightly on every hit so repeats never sound identical. Reset returns a slot to its built-in recording, or to synthesis where there isn't one. Files stay on this device and are held for the session only.</p>
+  <div class="slots" id="slots"></div>
+</section>
+
+<div class="console" id="console"></div>
+
+<p class="hint">Keep awake stops the screen locking — leave it on for the whole session · Drag a column to bring an ambience in · tap its name to mute or restore it · Ambience rides the whole bed without touching the bowls or gongs</p>
+</div>
+
+<script>
+/* ================= AUDIO CORE ================= */
+let ctx=null,master=null,revBus=null,volDry=null,volWet=null,buffers={},woke=false;
+function ensureAudio(){
+  if(ctx) return ctx;
+  ctx=new (window.AudioContext||window.webkitAudioContext)();
+  master=gain(0);
+  const comp=ctx.createDynamicsCompressor();
+  comp.threshold.value=-12;comp.knee.value=14;comp.ratio.value=4;comp.attack.value=.02;comp.release.value=.45;
+  master.connect(comp);comp.connect(ctx.destination);
+  const conv=ctx.createConvolver();conv.buffer=makeIR(5,2.3);
+  const wet=gain(.92);revBus=gain(1);revBus.connect(conv);conv.connect(wet);wet.connect(master);
+  /* Ambient bed bus: one volume node per path, driven by the Ambience slider. */
+  const sv=Math.pow(document.getElementById('bedVol').value/100,1.4);
+  volDry=gain(sv); volDry.connect(master);
+  volWet=gain(sv); volWet.connect(revBus);
+  master.gain.linearRampToValueAtTime(Math.pow(document.getElementById('master').value/100,1.4),ctx.currentTime+1.2);
+  decodeEmbedded();
+  return ctx;
+}
+function unlock(){ ensureAudio(); if(ctx.state==='suspended') ctx.resume();
+  decodeEmbedded();                       // retry anything that failed while suspended
+  if(!woke){ woke=true; takeWakeLock(); } }
+document.addEventListener('pointerdown',unlock,true);
+
+function makeIR(sec,decay){const sr=ctx.sampleRate,len=Math.floor(sr*sec),b=ctx.createBuffer(2,len,sr);
+  for(let c=0;c<2;c++){const d=b.getChannelData(c);
+    for(let i=0;i<len;i++){const t=i/len;d[i]=(Math.random()*2-1)*Math.pow(1-t,decay)*Math.min(1,i/(sr*.03));}}return b;}
+function noiseBuffer(kind){if(buffers[kind])return buffers[kind];
+  const sr=ctx.sampleRate,len=sr*5,b=ctx.createBuffer(2,len,sr);
+  for(let c=0;c<2;c++){const d=b.getChannelData(c);let last=0;
+    for(let i=0;i<len;i++){const w=Math.random()*2-1;
+      if(kind==='brown'){last=(last+.02*w)/1.02;d[i]=last*3.6;}else d[i]=w*.5;}}
+  buffers[kind]=b;return b;}
+const T=()=>ctx.currentTime;
+function gain(v){const g=ctx.createGain();g.gain.value=v;return g;}
+function bq(t,f,q){const b=ctx.createBiquadFilter();b.type=t;b.frequency.value=f;if(q)b.Q.value=q;return b;}
+function osc(R,t,f){const o=ctx.createOscillator();o.type=t;o.frequency.value=f;o.start();R.push(o);return o;}
+function nz(R,k){const s=ctx.createBufferSource();s.buffer=noiseBuffer(k);s.loop=true;s.start();R.push(s);return s;}
+function lfo(R,rate,depth,param,base){const o=ctx.createOscillator();o.frequency.value=rate;const g=gain(depth);
+  o.connect(g);g.connect(param);o.start();R.push(o);if(base!==undefined)param.value=base;return{o,g};}
+function pan(v){if(ctx.createStereoPanner){const p=ctx.createStereoPanner();p.pan.value=v;return p;}return gain(1);}
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const stopAll=R=>R.forEach(n=>{try{n.stop()}catch(e){}});
+const mmss=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
+const ease=p=>p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+
+/* ================= 432 Hz TUNING ================= */
+const A432=432;
+const semi=n=>A432*Math.pow(2,n/12);
+const NOTES={C:semi(-9),D:semi(-7),E:semi(-5),F:semi(-4),G:semi(-2),A:A432,B:semi(2)};
+const A2=A432/4, A3=A432/2;
+const PENTA=[0,2,5,7,9,12,14].map(n=>semi(n));
+
+/* ================= SAMPLE SLOTS =================
+   The three gongs are real recordings, embedded in this file as base64 so the
+   app stays a single offline document. Every other slot runs on synthesis
+   until a recording is loaded. A user file always wins; Reset restores the
+   built-in recording where there is one. */
+const SLOTS={
+  gongDeep:{label:'Deep gong',   buf:null, def:null, user:false, rate:1, vol:.95, source:'Built-in recording'},
+  gongMid: {label:'Temple gong', buf:null, def:null, user:false, rate:1, vol:.95, source:'Built-in recording'},
+  gongHigh:{label:'Bright gong', buf:null, def:null, user:false, rate:1, vol:.85, source:'Built-in recording'},
+  bells:   {label:'Temple bells',buf:null, def:null, user:false, rate:1, vol:.8},
+  windchimes:{label:'Wind chimes',buf:null, def:null, user:false, rate:1, vol:.9, source:'Built-in recording'},
+  chimes:  {label:'Koshi chimes',buf:null, def:null, user:false, rate:1, vol:.8},
+};
+const EMBEDDED={
+  gongDeep:  'audio/deep-gong.mp3',
+  gongMid:   'audio/temple-gong.mp3',
+  gongHigh:  'audio/bright-gong.mp3',
+  windchimes:'audio/wind-chimes.mp3',
+};
+
+/* The recordings live in /audio and are precached by the service worker, so
+   after the first visit the app runs with no network at all. */
+function decodeAudio(arr){        // promise form is missing on older Safari
+  return new Promise((res,rej)=>{
+    let p;
+    try{ p=ctx.decodeAudioData(arr,res,rej); }catch(e){ rej(e); return; }
+    if(p&&p.then) p.then(res,rej);
+  });
+}
+let decoding=false;
+async function decodeEmbedded(){
+  if(decoding||!ctx) return; decoding=true;
+  for(const id of Object.keys(EMBEDDED)){
+    if(SLOTS[id].def) continue;
+    try{
+      const r=await fetch(EMBEDDED[id]);
+      if(!r.ok) throw new Error(r.status);
+      const buf=await decodeAudio(await r.arrayBuffer());
+      SLOTS[id].def=buf; SLOTS[id].error=false;
+      if(!SLOTS[id].user){ SLOTS[id].buf=buf; markSlot(id); }
+    }catch(e){ SLOTS[id].error=true; markSlot(id); }
+  }
+  decoding=false;
+}
+
+function playSample(buf,{rate=1,vol=.8,pan:pp=0,rev=.5,detune=.04,dest=null}={}){
+  const src=ctx.createBufferSource(); src.buffer=buf;
+  src.playbackRate.value=rate*(1+(Math.random()-.5)*detune);
+  const g=gain(vol*rnd(.85,1.05)), p=pan(pp);
+  src.connect(g); g.connect(p);
+  p.connect(dest||master);
+  const s=gain(rev); g.connect(s); s.connect(dest?volWet:revBus);
+  src.start();
+  src.onended=()=>{try{g.disconnect();p.disconnect();s.disconnect();}catch(e){}};
+  return {stop(fade){ g.gain.setTargetAtTime(.0001,T(),fade/3);
+    setTimeout(()=>{try{src.stop()}catch(e){}},fade*1000+200); }};
+}
+
+/* ================= BOWL STRIKE / SUSTAIN ================= */
+function strike(freq,vel,panPos){
+  ensureAudio();
+  const t=T(),out=gain(vel),p=pan(panPos||0);
+  out.connect(p);p.connect(master);
+  const s=gain(.5);out.connect(s);s.connect(revBus);
+  [[1,1,9],[2.76,.5,6.5],[5.4,.24,4.2],[8.9,.11,2.6],[13.4,.05,1.6]].forEach(([r,a,dec],i)=>{
+    const g=gain(0);
+    const A=ctx.createOscillator();A.type='sine';A.frequency.value=freq*r;
+    const B=ctx.createOscillator();B.type='sine';B.frequency.value=freq*r+.7+i*.5;
+    A.connect(g);B.connect(g);g.connect(out);
+    g.gain.setValueAtTime(.0001,t);
+    g.gain.linearRampToValueAtTime(a*.28,t+.012+i*.006);
+    g.gain.exponentialRampToValueAtTime(.0001,t+dec);
+    A.start(t);B.start(t);A.stop(t+dec+.1);B.stop(t+dec+.1);
+  });
+  const n=ctx.createBufferSource();n.buffer=noiseBuffer('white');
+  const nb=bq('bandpass',freq*4.2,2.2),ng=gain(0);
+  n.connect(nb);nb.connect(ng);ng.connect(out);
+  ng.gain.setValueAtTime(.0001,t);ng.gain.linearRampToValueAtTime(.09,t+.006);
+  ng.gain.exponentialRampToValueAtTime(.0001,t+.42);
+  n.start(t);n.stop(t+.5);
+  setTimeout(()=>{try{out.disconnect();p.disconnect();s.disconnect();}catch(e){}},10000);
+}
+function sustain(freq,panPos){
+  const R=[],out=gain(.0001),p=pan(panPos||0),lp=bq('lowpass',3000,.7);
+  lp.connect(out);out.connect(p);p.connect(master);
+  const s=gain(.55);out.connect(s);s.connect(revBus);
+  [[1,1],[2.01,.26],[2.76,.3],[4.06,.09],[5.41,.12]].forEach(([r,a],i)=>{
+    const g=gain(a*.34);
+    const A=osc(R,'sine',freq*r),B=osc(R,'sine',freq*r+.4+i*.28);
+    A.connect(g);B.connect(g);g.connect(lp);
+    lfo(R,.06+i*.037,a*.13,g.gain,a*.34);
+  });
+  const n=nz(R,'white'),nb=bq('bandpass',freq*2.2,4),ng=gain(.012);
+  n.connect(nb);nb.connect(ng);ng.connect(lp);
+  return{ in(sec){out.gain.cancelScheduledValues(T());out.gain.setTargetAtTime(.34,T(),sec/3);},
+    out(sec){out.gain.cancelScheduledValues(T());out.gain.setTargetAtTime(.0001,T(),sec/3.2);
+      setTimeout(()=>{stopAll(R);try{out.disconnect();p.disconnect();s.disconnect();}catch(e){}},sec*1000+900);} };
+}
+
+/* ================= AMBIENT VOICES ================= */
+const V={};
+V.ocean=()=>{const R=[],out=gain(.9);
+  const n=nz(R,'brown'),lp=bq('lowpass',620,.9),sw=gain(.42);n.connect(lp);lp.connect(sw);sw.connect(out);
+  lfo(R,.055,340,lp.frequency,640);lfo(R,.055,.3,sw.gain,.42);
+  const n2=nz(R,'white'),hp=bq('highpass',2100,.7),fg=gain(.03);n2.connect(hp);hp.connect(fg);fg.connect(out);
+  lfo(R,.043,.025,fg.gain,.03);
+  return{out,dispose:()=>stopAll(R)};};
+
+V.rain=()=>{const R=[],out=gain(.75);
+  const n=nz(R,'white'),hp=bq('highpass',760,.7),lp=bq('lowpass',7200,.7),g=gain(.3);
+  n.connect(hp);hp.connect(lp);lp.connect(g);g.connect(out);lfo(R,.07,.05,g.gain,.3);
+  const n2=nz(R,'brown'),l2=bq('lowpass',200,.7),g2=gain(.22);n2.connect(l2);l2.connect(g2);g2.connect(out);
+  return{out,dispose:()=>stopAll(R)};};
+
+V.chimes=()=>{const out=gain(.5);let live=true,timer;
+  (function ping(){ if(!live)return;
+    const t=T(),pp=rnd(-.7,.7);
+    if(SLOTS.chimes.buf){
+      playSample(SLOTS.chimes.buf,{rate:SLOTS.chimes.rate*Math.pow(2,(Math.floor(rnd(-4,8)))/12),
+        vol:rnd(.25,.5),pan:pp,rev:.6,dest:out});
+    } else {
+      const fr=PENTA[Math.floor(Math.random()*PENTA.length)]*(Math.random()<.22?2:1);
+      const car=ctx.createOscillator();car.type='sine';car.frequency.value=fr;
+      const mod=ctx.createOscillator();mod.type='sine';mod.frequency.value=fr*3.47;
+      const mg=gain(fr*2.1);mod.connect(mg);mg.connect(car.frequency);
+      const g=gain(0),p=pan(pp);car.connect(g);g.connect(p);p.connect(out);
+      const amp=rnd(.07,.17);
+      g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(amp,t+.006);
+      g.gain.exponentialRampToValueAtTime(.0001,t+3.4);
+      mg.gain.setValueAtTime(fr*2.1,t);mg.gain.exponentialRampToValueAtTime(fr*.04,t+.6);
+      car.start(t);mod.start(t);car.stop(t+3.6);mod.stop(t+3.6);
+      car.onended=()=>{try{g.disconnect();p.disconnect();}catch(e){}};
+    }
+    timer=setTimeout(ping,rnd(700,3700));})();
+  return{out,dispose(){live=false;clearTimeout(timer);}};};
+
+/* Wind chimes: a real 95-second recording, crossfaded end-to-start so it loops
+   without a seam. Started at a random point so it never opens the same way. */
+V.windchimes=()=>{
+  const out=gain(.9); let src=null, live=true, poll=null;
+  function begin(){
+    const buf=SLOTS.windchimes.buf; if(!buf||!live||src) return;
+    src=ctx.createBufferSource(); src.buffer=buf; src.loop=true;
+    src.connect(out); src.start(0, Math.random()*buf.duration);
+  }
+  begin();
+  if(!src) poll=setInterval(()=>{ if(!live){clearInterval(poll);return;}
+    if(SLOTS.windchimes.buf){ clearInterval(poll); begin(); } },250);
+  return{out,dispose(){ live=false; clearInterval(poll);
+    if(src){try{src.stop()}catch(e){}} }};
+};
+
+/* Temple bells reworked as a rin / standing bell: a strong low hum tone,
+   partials that speak slowly, a fourteen-second tail, and long silences. */
+V.bells=()=>{const out=gain(.6);let live=true,timer;
+  const roots=[A3/2,A3/2*Math.pow(2,3/12),A3/2*Math.pow(2,7/12)];
+  (function toll(){ if(!live)return;
+    const t=T(),pp=rnd(-.4,.4);
+    if(SLOTS.bells.buf){
+      playSample(SLOTS.bells.buf,{rate:SLOTS.bells.rate*rnd(.94,1.08),vol:rnd(.35,.55),pan:pp,rev:.8,dest:out});
+    } else {
+      const f=roots[Math.floor(Math.random()*roots.length)];
+      const bus=gain(1),p=pan(pp),lp=bq('lowpass',2400,.6);
+      lp.connect(bus);bus.connect(p);p.connect(out);
+      /* hum tone an octave under the strike note — what makes a bell warm */
+      [[0.5,.85,14],[1,1,13],[2.0,.34,10],[2.83,.22,8],[3.9,.1,5],[5.4,.05,3.4]].forEach(([r,a,dec],i)=>{
+        const g=gain(0);
+        const A=ctx.createOscillator();A.type='sine';A.frequency.value=f*r;
+        const B=ctx.createOscillator();B.type='sine';B.frequency.value=f*r+rnd(.2,.75);
+        A.connect(g);B.connect(g);g.connect(lp);
+        g.gain.setValueAtTime(.0001,t);
+        g.gain.linearRampToValueAtTime(a*.14,t+(i<2?.04:rnd(.1,.4)));
+        g.gain.exponentialRampToValueAtTime(.0001,t+dec*rnd(.9,1.15));
+        A.start(t);B.start(t);A.stop(t+dec+.3);B.stop(t+dec+.3);
+        const w=ctx.createOscillator();w.frequency.value=rnd(.1,.7);
+        const wg=gain(a*.04);w.connect(wg);wg.connect(g.gain);w.start(t);w.stop(t+dec);
+      });
+      const n=ctx.createBufferSource();n.buffer=noiseBuffer('white');
+      const nb=bq('bandpass',f*6,3),ng=gain(0);
+      n.connect(nb);nb.connect(ng);ng.connect(lp);
+      ng.gain.setValueAtTime(.0001,t);ng.gain.linearRampToValueAtTime(.05,t+.005);
+      ng.gain.exponentialRampToValueAtTime(.0001,t+.3);
+      n.start(t);n.stop(t+.35);
+      setTimeout(()=>{try{bus.disconnect();p.disconnect();}catch(e){}},16000);
+    }
+    timer=setTimeout(toll,rnd(11000,26000));})();
+  return{out,dispose(){live=false;clearTimeout(timer);}};};
+
+V.drone=()=>{const R=[],out=gain(.22),lp=bq('lowpass',780,.9);lp.connect(out);
+  [-11,-4,0,5,12].forEach(d=>{const o=osc(R,'sawtooth',A2);o.detune.value=d;o.connect(lp);});
+  const sub=osc(R,'sine',A2/2),sg=gain(.4);sub.connect(sg);sg.connect(out);
+  lfo(R,.04,280,lp.frequency,780);
+  return{out,dispose:()=>stopAll(R)};};
+
+V.theta=()=>{const R=[],out=gain(.4);
+  const Lo=osc(R,'sine',A3-3),Ro=osc(R,'sine',A3+3);
+  const pl=pan(-1),pr=pan(1),gl=gain(.35),gr=gain(.35);
+  Lo.connect(gl);gl.connect(pl);pl.connect(out);Ro.connect(gr);gr.connect(pr);pr.connect(out);
+  return{out,dispose:()=>stopAll(R)};};
+
+/* ================= LAYERS ================= */
+const LAYERS=[
+ {id:'ocean', name:'Ocean',        rev:.25, def:.45},
+ {id:'rain',  name:'Rain',         rev:.2,  def:.35},
+ {id:'chimes',name:'Koshi chimes', rev:.7,  def:.4},
+ {id:'windchimes',name:'Wind chimes', rev:.4,  def:.4},
+ {id:'bells', name:'Temple bells', rev:.8,  def:.4},
+ {id:'drone', name:'Earth drone',  rev:.3,  def:.4},
+ {id:'theta', name:'Theta beat',   rev:.15, def:.3},
+];
+const L={}; LAYERS.forEach(l=>L[l.id]={level:0,last:l.def,voice:null,g:null,s:null});
+function spin(l){ const st=L[l.id]; if(st.voice) return;
+  ensureAudio();
+  const v=V[l.id](),g=gain(0),s=gain(l.rev);
+  v.out.connect(g); g.connect(volDry); g.connect(s); s.connect(volWet);
+  st.voice=v;st.g=g;st.s=s; }
+function setLevel(id,val,slow){
+  const st=L[id];
+  st.level=clamp(val,0,1);
+  if(st.level>0.002) spin(LAYERS.find(x=>x.id===id));
+  if(st.g) st.g.gain.setTargetAtTime(st.level*st.level,T(),slow?.5:.2);
+  if(st.level>0.02) st.last=st.level;
+  const col=document.getElementById('col-'+id);
+  col.querySelector('.water').style.height=(st.level*100)+'%';
+  col.querySelector('.line').style.bottom=(st.level*100)+'%';
+  col.querySelector('.pc').textContent=Math.round(st.level*100);
+  col.classList.toggle('hot',st.level>.16);
+}
+function fadeTo(id,target,sec){
+  const from=L[id].level,t0=performance.now(),dur=sec*1000;
+  if(target>0) spin(LAYERS.find(x=>x.id===id));
+  (function step(now){ const p=clamp((now-t0)/dur,0,1);
+    setLevel(id,from+(target-from)*ease(p),true);
+    if(p<1) requestAnimationFrame(step); })(t0);
+}
+const consoleEl=document.getElementById('console');
+LAYERS.forEach(l=>{
+  const strip=document.createElement('div'); strip.className='strip'; strip.id='strip-'+l.id;
+  strip.innerHTML=`<div class="cap">${l.name}</div>
+    <div class="col" id="col-${l.id}"><div class="water"></div><div class="line"></div><div class="pc">0</div></div>`;
+  const col=strip.querySelector('.col'); let drag=false;
+  const upd=e=>{ const r=col.getBoundingClientRect(); setLevel(l.id,1-(e.clientY-r.top)/r.height); startClock(); };
+  col.addEventListener('pointerdown',e=>{drag=true;col.setPointerCapture(e.pointerId);upd(e);});
+  col.addEventListener('pointermove',e=>{if(drag)upd(e);});
+  col.addEventListener('pointerup',()=>drag=false);
+  col.addEventListener('pointercancel',()=>drag=false);
+  strip.querySelector('.cap').addEventListener('click',()=>{ startClock();
+    const st=L[l.id]; fadeTo(l.id, st.level>0.02?0:st.last, st.level>0.02?6:5); });
+  consoleEl.appendChild(strip);
+});
+
+/* ================= AMBIENCE BED VOLUME =================
+   volDry / volWet sit between every ambient layer and the outputs, so this
+   one slider rides the whole bed without touching the bowls or the gongs. */
+document.getElementById('bedVol').addEventListener('input',e=>{
+  ensureAudio(); const v=Math.pow(e.target.value/100,1.4);
+  volDry.gain.setTargetAtTime(v,T(),.15); volWet.gain.setTargetAtTime(v,T(),.15);
+});
+
+/* ================= BOWL CIRCLE ================= */
+const BOWLS=[
+ {id:'root',  name:'Root',      note:'C', f:NOTES.C, tint:'#3F92AC'},
+ {id:'sacral',name:'Sacral',    note:'D', f:NOTES.D, tint:'#4E9DB6'},
+ {id:'solar', name:'Solar',     note:'E', f:NOTES.E, tint:'#5DA8BF'},
+ {id:'heart', name:'Heart',     note:'F', f:NOTES.F, tint:'#6FB4C9'},
+ {id:'throat',name:'Throat',    note:'G', f:NOTES.G, tint:'#84C0D3'},
+ {id:'brow',  name:'Third eye', note:'A', f:NOTES.A, tint:'#9BCDDC'},
+ {id:'crown', name:'Crown',     note:'B', f:NOTES.B, tint:'#B4DAE5'},
+];
+let octave=0, latch=false;
+const stage=document.getElementById('stage'), B={};
+BOWLS.forEach(b=>{
+  B[b.id]={sus:null,timer:null};
+  const d=document.createElement('div');
+  d.className='bowl'; d.id='b-'+b.id; d.setAttribute('role','button'); d.tabIndex=0;
+  d.style.background=`radial-gradient(120% 120% at 32% 24%, rgba(255,255,255,.9), ${b.tint}55)`;
+  d.innerHTML=`<div class="inner"><span class="n">${b.name}</span>
+    <span class="k">${b.note}</span><span class="hz" id="f-${b.id}">${Math.round(b.f)} Hz</span></div>`;
+  stage.appendChild(d);
+  d.addEventListener('pointerdown',e=>{
+    e.preventDefault(); startClock();
+    try{d.setPointerCapture(e.pointerId);}catch(err){}
+    strike(freqOf(b),.55,panOf(d)); ripple(d); d.classList.add('ringing');
+    if(latch) B[b.id].sus ? releaseBowl(b.id) : holdBowl(b.id,2.2);
+    else B[b.id].timer=setTimeout(()=>holdBowl(b.id,2.2),340);
+  });
+  const rel=()=>{ if(latch){ if(!B[b.id].sus) d.classList.remove('ringing'); return; }
+    clearTimeout(B[b.id].timer); releaseBowl(b.id); };
+  d.addEventListener('pointerup',rel);
+  d.addEventListener('pointercancel',rel);
+  d.addEventListener('keydown',e=>{ if(e.key===' '||e.key==='Enter'){e.preventDefault();strike(freqOf(b),.55,0);ripple(d);} });
+});
+const freqOf=b=>b.f*Math.pow(2,octave);
+function panOf(d){ const r=stage.getBoundingClientRect(),e=d.getBoundingClientRect();
+  return (((e.left+e.width/2)-r.left)/r.width*2-1)*.6; }
+function holdBowl(id,fade){
+  const b=BOWLS.find(x=>x.id===id),d=document.getElementById('b-'+id);
+  ensureAudio(); if(B[id].sus) return;
+  const s=sustain(freqOf(b),panOf(d)); s.in(fade||2.2); B[id].sus=s; d.classList.add('ringing');
+}
+function releaseBowl(id){
+  const d=document.getElementById('b-'+id),s=B[id].sus;
+  if(s){ s.out(4.5); B[id].sus=null; }
+  setTimeout(()=>{ if(!B[id].sus) d.classList.remove('ringing'); },1800);
+}
+function ripple(d){
+  const r=stage.getBoundingClientRect(),e=d.getBoundingClientRect();
+  const x=document.createElement('div'); x.className='ripple';
+  x.style.width=x.style.height=e.width+'px';
+  x.style.left=((e.left+e.width/2)-r.left)+'px';
+  x.style.top=((e.top+e.height/2)-r.top)+'px';
+  x.style.animation='spread 2.6s cubic-bezier(.15,.6,.3,1) forwards';
+  stage.appendChild(x); setTimeout(()=>x.remove(),2700);
+}
+/* diameter and type size both scale off the ring, so nothing ever clips */
+function layout(){
+  const w=stage.clientWidth,R=w*.355,cx=w/2,cy=w/2;
+  BOWLS.forEach((b,i)=>{
+    const a=Math.PI/2+i*(2*Math.PI/BOWLS.length);
+    const size=w*(.225-i*.007);
+    const d=document.getElementById('b-'+b.id);
+    d.style.width=d.style.height=size+'px';
+    d.style.left=(cx+Math.cos(a)*R)+'px';
+    d.style.top=(cy+Math.sin(a)*R)+'px';
+    d.style.fontSize=clamp(size*.118,9,19)+'px';
+  });
+}
+window.addEventListener('resize',layout); layout(); setTimeout(layout,250);
+if(document.fonts&&document.fonts.ready) document.fonts.ready.then(layout);
+
+document.getElementById('octave').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  octave=+b.dataset.o;
+  document.querySelectorAll('#octave button').forEach(x=>x.classList.toggle('on',x===b));
+  BOWLS.forEach(bw=>document.getElementById('f-'+bw.id).textContent=
+    Math.round(bw.f*Math.pow(2,octave))+' Hz');
+});
+const latchBtn=document.getElementById('latch');
+latchBtn.addEventListener('click',()=>{ latch=!latch; latchBtn.classList.toggle('on',latch);
+  if(!latch) BOWLS.forEach(b=>releaseBowl(b.id)); });
+
+/* ================= GONG BUTTONS ================= */
+const GONGS=[
+ {id:'gongDeep', name:'Deep gong',   f:A432/8,     hint:'54 Hz'},
+ {id:'gongMid',  name:'Temple gong', f:A432/8*1.5, hint:'81 Hz'},
+ {id:'gongHigh', name:'Bright gong', f:A432/4,     hint:'108 Hz'},
+];
+const strikesEl=document.getElementById('strikes'), G={};
+GONGS.forEach(g=>{
+  G[g.id]={active:[]};
+  const b=document.createElement('button'); b.className='gong'; b.id='g-'+g.id;
+  b.innerHTML=`<span class="t">${g.name}</span><span class="h" id="gh-${g.id}">${g.hint}</span>`;
+  function hit(){
+    const slot=SLOTS[g.id]; if(!slot.buf) return false;
+    /* strikes layer, the way a real gong does when struck again while ringing.
+       detune stays tiny so repeats vary without sounding pitch-shifted. */
+    const v=playSample(slot.buf,{rate:slot.rate,vol:slot.vol,rev:.45,detune:.02});
+    G[g.id].active.push(v);
+    if(G[g.id].active.length>6) G[g.id].active.shift().stop(1.5);
+    return true;
+  }
+  b.addEventListener('pointerdown',e=>{
+    e.preventDefault(); startClock(); unlock();
+    try{b.setPointerCapture(e.pointerId);}catch(err){}
+    b.classList.add('ringing');
+    /* the recording is the only sound source — if decoding hasn't finished
+       yet, hold the strike rather than substituting a synthesised one */
+    if(!hit()){ decodeEmbedded();
+      let tries=0; const w=setInterval(()=>{ if(hit()||++tries>60) clearInterval(w); },100); }
+    setTimeout(()=>b.classList.remove('ringing'),2400);
+  });
+  strikesEl.appendChild(b);
+});
+
+/* ================= RECORDINGS DRAWER ================= */
+const slotsEl=document.getElementById('slots');
+Object.keys(SLOTS).forEach(id=>{
+  const s=SLOTS[id];
+  const d=document.createElement('div'); d.className='slot'; d.id='slot-'+id;
+  d.innerHTML=`<div class="sn">${s.label}</div><div class="ss" id="ss-${id}">Built-in synthesis</div>
+    <label>Load file<input type="file" accept="audio/*" id="fi-${id}"></label>
+    <button class="clr" id="cl-${id}">Reset</button>`;
+  slotsEl.appendChild(d);
+  d.querySelector('#fi-'+id).addEventListener('change',async e=>{
+    const f=e.target.files[0]; if(!f) return;
+    ensureAudio();
+    try{
+      s.buf=await decodeAudio(await f.arrayBuffer());
+      s.user=true; s.rate=1; markSlot(id,f.name);
+    }catch(err){ document.getElementById('ss-'+id).textContent='Could not read that file'; }
+  });
+  d.querySelector('#cl-'+id).addEventListener('click',()=>{
+    s.user=false; s.buf=s.def||null; s.rate=1; markSlot(id);
+  });
+});
+function markSlot(id,name){
+  const s=SLOTS[id], el=document.getElementById('ss-'+id);
+  if(!el) return;
+  el.textContent = s.user ? ('Your recording: '+(name||'loaded'))
+    : s.buf ? (s.source||'Recording loaded')
+    : s.error ? 'Could not decode on this browser'
+    : s.source ? 'Loading recording…' : 'Built-in synthesis';
+  el.classList.toggle('ok',!!s.buf);
+  const gb=document.getElementById('g-'+id); if(gb) gb.classList.toggle('sampled',!!s.buf);
+}
+document.getElementById('recsBtn').addEventListener('click',e=>{
+  const p=document.getElementById('recs');
+  p.classList.toggle('open'); e.target.classList.toggle('on',p.classList.contains('open'));
+});
+
+/* ================= GLOBAL ================= */
+document.getElementById('allOff').addEventListener('click',()=>{
+  LAYERS.forEach(l=>{ if(L[l.id].level>0) fadeTo(l.id,0,9); });
+  BOWLS.forEach(b=>releaseBowl(b.id));
+  GONGS.forEach(g=>{ G[g.id].active.splice(0).forEach(v=>v.stop(7));
+    document.getElementById('g-'+g.id).classList.remove('ringing'); });
+});
+let started=false,t0=0;
+function startClock(){ if(started) return; started=true; t0=Date.now();
+  setInterval(()=>{ document.getElementById('clock').textContent=mmss(Math.floor((Date.now()-t0)/1000)); },500); }
+document.getElementById('master').addEventListener('input',e=>{
+  if(!ctx) return; master.gain.setTargetAtTime(Math.pow(e.target.value/100,1.4),T(),.2);
+});
+
+/* ================= KEEPING THE SCREEN AWAKE =================
+   The screen going to sleep is the real problem to solve: iOS suspends Web
+   Audio the moment the device locks, so the reliable answer is to stop it
+   locking at all. Wake Lock handles this on iOS 16.4+, Chrome and Edge; the
+   muted looping video is the fallback for anything older. The browser drops
+   the lock every time the page is hidden, so it has to be re-taken on every
+   return to the foreground. */
+let wantAwake=true, wakeLock=null;
+const awakeBtn=document.getElementById('awakeBtn');
+const nosleepVid=document.getElementById('nosleep');
+
+async function takeWakeLock(){
+  if(!wantAwake||document.visibilityState!=='visible') return;
+  if('wakeLock' in navigator){
+    try{
+      if(wakeLock&&!wakeLock.released) return;
+      wakeLock=await navigator.wakeLock.request('screen');
+      wakeLock.addEventListener('release',()=>{ wakeLock=null; });
+      setAwakeUI(true); return;
+    }catch(e){ /* refused — e.g. Low Power Mode — fall through to the video */ }
+  }
+  try{ await nosleepVid.play(); setAwakeUI(true); }catch(e){ setAwakeUI(false); }
+}
+function dropWakeLock(){
+  try{ if(wakeLock){ wakeLock.release(); wakeLock=null; } }catch(e){}
+  try{ nosleepVid.pause(); }catch(e){}
+  setAwakeUI(false);
+}
+function setAwakeUI(on){
+  awakeBtn.classList.toggle('on',on&&wantAwake);
+  awakeBtn.textContent = !wantAwake ? 'Sleep allowed' : on ? 'Keep awake' : 'Tap to keep awake';
+}
+awakeBtn.addEventListener('click',()=>{ wantAwake=!wantAwake; wantAwake?takeWakeLock():dropWakeLock(); });
+
+/* Coming back to the foreground: re-take the lock, wake the audio context, and
+   fade the room back in rather than snapping it on. */
+async function resumeEverything(){
+  takeWakeLock();
+  if(!ctx) return;
+  if(ctx.state==='suspended'){
+    try{ await ctx.resume(); }catch(e){ return; }
+    const target=Math.pow(document.getElementById('master').value/100,1.4);
+    master.gain.cancelScheduledValues(ctx.currentTime);
+    master.gain.setValueAtTime(Math.min(master.gain.value,0.0001),ctx.currentTime);
+    master.gain.linearRampToValueAtTime(target,ctx.currentTime+1.6);
+  }
+  decodeEmbedded();
+}
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') resumeEverything(); });
+window.addEventListener('focus',resumeEverything);
+window.addEventListener('pageshow',resumeEverything);
+document.addEventListener('pointerdown',()=>{ if(wantAwake) takeWakeLock(); },true);
+
+/* Create the context immediately — it starts suspended, makes no sound, and
+   lets the embedded recordings decode before the first touch. unlock() resumes
+   it on the first pointer event. Without this the first gong tap fired before
+   its buffer existed. */
+try{ ensureAudio(); }catch(e){}
+takeWakeLock();
+
+/* Offline: after the first load everything is served from the cache. */
+if('serviceWorker' in navigator && location.protocol.startsWith('http')){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>

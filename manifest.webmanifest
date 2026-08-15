@@ -1,0 +1,16 @@
+{
+  "name": "Tide Ring — Salty Dog Retreats",
+  "short_name": "Tide Ring",
+  "description": "A live sound-healing instrument: seven bowls tuned to A=432, three gongs, and a continuous ambience bed.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#E6F3F8",
+  "theme_color": "#E6F3F8",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
