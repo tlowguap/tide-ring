@@ -283,12 +283,11 @@ const a3=()=>Settings.state.referencePitch/2;
 const penta=()=>[0,2,5,7,9,12,14].map(n=>semi(n));
 
 /* ================= SAMPLE SLOTS =================
-   The three gongs are real recordings, embedded in this file as base64 so the
-   app stays a single offline document. Every other slot runs on synthesis
+   The two gongs are real recordings, loaded from the offline audio cache so the
+   app keeps working without a network. Every other slot runs on synthesis
    until a recording is loaded. A user file always wins; Reset restores the
    built-in recording where there is one. */
 const SLOTS={
-  gongDeep:{label:'Deep gong',   buf:null, def:null, user:false, rate:1, vol:.95, source:'Built-in recording'},
   gongMid: {label:'Temple gong', buf:null, def:null, user:false, rate:1, vol:.95, source:'Built-in recording'},
   gongHigh:{label:'Bright gong', buf:null, def:null, user:false, rate:1, vol:.85, source:'Built-in recording'},
   bells:   {label:'Temple bells',buf:null, def:null, user:false, rate:1, vol:.8},
@@ -296,7 +295,6 @@ const SLOTS={
   chimes:  {label:'Koshi chimes',buf:null, def:null, user:false, rate:1, vol:.8},
 };
 const EMBEDDED={
-  gongDeep:  'audio/deep-gong.mp3',
   gongMid:   'audio/temple-gong.mp3',
   gongHigh:  'audio/bright-gong.mp3',
   windchimes:'audio/wind-chimes.mp3',
@@ -626,7 +624,6 @@ latchBtn.addEventListener('click',()=>{ latch=!latch; latchBtn.classList.toggle(
 
 /* ================= GONG BUTTONS ================= */
 const GONGS=[
- {id:'gongDeep', name:'Deep gong',   ratio:1/8},
  {id:'gongMid',  name:'Temple gong', ratio:1/8*1.5},
  {id:'gongHigh', name:'Bright gong', ratio:1/4},
 ];

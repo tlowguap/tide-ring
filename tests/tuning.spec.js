@@ -1,5 +1,11 @@
 const { test, expect } = require('@playwright/test');
 
+test('shows only the two remaining gongs', async ({ page }) => {
+  await page.goto('/');
+
+  await expect(page.locator('.gong .t')).toHaveText(['Temple gong', 'Bright gong']);
+});
+
 test('switches displayed values and sample rate between A432 and A528', async ({ page }) => {
   await page.goto('/');
 
@@ -9,7 +15,6 @@ test('switches displayed values and sample rate between A432 and A528', async ({
 
   await expect(page.locator('#f-root')).toHaveText('314 Hz');
   await expect(page.locator('#f-brow')).toHaveText('528 Hz');
-  await expect(page.locator('#gh-gongDeep')).toHaveText('66 Hz');
   await expect(page.locator('#gh-gongMid')).toHaveText('99 Hz');
   await expect(page.locator('#gh-gongHigh')).toHaveText('132 Hz');
 
