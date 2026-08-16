@@ -19,6 +19,8 @@ for (const viewport of viewports) {
       const strips = [...document.querySelectorAll('.strip')].map(el => rect(`#${el.id}`));
       const controls = [...document.querySelectorAll('header > *')].map(el => el.getBoundingClientRect());
       const gongs = [...document.querySelectorAll('.gong')].map(el => el.getBoundingClientRect());
+      const interactiveHeights = [...document.querySelectorAll('.chipbox input[type=range], .seg button, .strip .cap')]
+        .map(el => el.getBoundingClientRect().height);
       const firstStripStyle = getComputedStyle(document.querySelector('.strip'));
 
       return {
@@ -31,6 +33,7 @@ for (const viewport of viewports) {
         scrollSnapAlign: firstStripStyle.scrollSnapAlign,
         controls: controls.map(item => ({ left: item.left, right: item.right })),
         gongHeights: gongs.map(item => item.height),
+        interactiveHeights,
       };
     });
 
@@ -41,6 +44,7 @@ for (const viewport of viewports) {
     expect(new Set(geometry.stripTops).size).toBe(1);
     expect(geometry.controls.every(item => item.left >= 0 && item.right <= geometry.viewportWidth)).toBe(true);
     expect(geometry.gongHeights.every(height => height >= 44)).toBe(true);
+    expect(geometry.interactiveHeights.every(height => height >= 44)).toBe(true);
 
     if (viewport.consoleScrolls) {
       expect(geometry.consoleScrollWidth).toBeGreaterThan(geometry.consoleClientWidth);

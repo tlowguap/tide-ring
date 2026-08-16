@@ -118,6 +118,10 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
 .col.hot .pc{color:#fff}
 .hint{text-align:center;font-size:11.5px;color:var(--ink-3);margin:12px auto 0;line-height:1.7}
 
+@media (max-width:1024px){
+  .chipbox input[type=range],.seg button,.strip .cap{min-height:44px}
+}
+
 @media (max-width:900px){
   header{gap:8px}
   .stage{width:min(100%,58vh,560px)}
