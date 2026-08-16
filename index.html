@@ -246,7 +246,9 @@ function ensureAudio(){
   decodeEmbedded();
   return ctx;
 }
-function unlock(){ ensureAudio(); if(ctx.state==='suspended') ctx.resume();
+function unlock(){ ensureAudio();
+  const resumed=ctx.state==='suspended'?ctx.resume():Promise.resolve();
+  Promise.resolve(resumed).then(()=>{ if(pendingRetune) retuneActiveAudio(); }).catch(()=>{});
   decodeEmbedded();                       // retry anything that failed while suspended
   if(!woke){ woke=true; takeWakeLock(); } }
 document.addEventListener('pointerdown',unlock,true);
@@ -491,6 +493,7 @@ const LAYERS=[
  {id:'drone', name:'Earth drone',  rev:.3,  def:.4},
  {id:'theta', name:'Theta beat',   rev:.15, def:.3},
 ];
+const PITCHED_LAYER_IDS=new Set(['chimes','windchimes','bells','drone','theta']);
 const L={}; LAYERS.forEach(l=>L[l.id]={level:0,last:l.def,voice:null,g:null,s:null});
 function spin(l){ const st=L[l.id]; if(st.voice) return;
   ensureAudio();
@@ -664,6 +667,45 @@ tuningSelect.addEventListener('change',()=>Settings.setReferencePitch(tuningSele
 Settings.subscribe(change=>{ if(change==='tuning'){ tuningSelect.value=String(Settings.state.referencePitch); updateTuningUI(); } });
 updateTuningUI();
 
+let pendingRetune=false,retuneTimer=null;
+const retuneHeld=new Set();
+function retuneActiveAudio(){
+  if(!ctx||ctx.state!=='running'){ pendingRetune=true; return; }
+  pendingRetune=false;
+  const now=T();
+  PITCHED_LAYER_IDS.forEach(id=>{
+    const st=L[id];
+    if(!st.voice||!st.g) return;
+    st.g.gain.cancelScheduledValues(now);
+    st.g.gain.setValueAtTime(Math.max(.0001,st.g.gain.value),now);
+    st.g.gain.exponentialRampToValueAtTime(.0001,now+.65);
+  });
+  BOWLS.forEach(b=>{
+    const active=B[b.id].sus;
+    if(!active) return;
+    retuneHeld.add(b.id);
+    active.out(.65);
+    B[b.id].sus=null;
+  });
+  clearTimeout(retuneTimer);
+  retuneTimer=setTimeout(()=>{
+    PITCHED_LAYER_IDS.forEach(id=>{
+      const st=L[id];
+      if(!st.voice) return;
+      try{st.voice.dispose();}catch(error){}
+      try{st.g.disconnect();st.s.disconnect();}catch(error){}
+      st.voice=null;st.g=null;st.s=null;
+      if(st.level>.002){
+        spin(LAYERS.find(layer=>layer.id===id));
+        st.g.gain.setTargetAtTime(st.level*st.level,T(),.22);
+      }
+    });
+    [...retuneHeld].forEach(id=>holdBowl(id,.7));
+    retuneHeld.clear();
+  },700);
+}
+Settings.subscribe(change=>{ if(change==='tuning') retuneActiveAudio(); });
+
 /* ================= RECORDINGS DRAWER ================= */
 const slotsEl=document.getElementById('slots');
 Object.keys(SLOTS).forEach(id=>{
@@ -760,6 +802,7 @@ async function resumeEverything(){
     master.gain.setValueAtTime(Math.min(master.gain.value,0.0001),ctx.currentTime);
     master.gain.linearRampToValueAtTime(target,ctx.currentTime+1.6);
   }
+  if(pendingRetune) retuneActiveAudio();
   decodeEmbedded();
 }
 document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') resumeEverything(); });

@@ -27,3 +27,35 @@ test('remembers A528 across reloads', async ({ page }) => {
   await expect(page.locator('#tuningSelect')).toHaveValue('528');
   await expect(page.locator('#f-brow')).toHaveText('528 Hz');
 });
+
+test('retunes active pitched voices without losing their state', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#themeToggle').click();
+  await page.evaluate(() => {
+    setLevel('drone', .4);
+    holdBowl('root', .01);
+    window.__retuneBefore = {
+      voice: L.drone.voice,
+      sustain: B.root.sus,
+      ocean: L.ocean.voice,
+    };
+  });
+
+  await page.locator('#tuningSelect').selectOption('528');
+  await page.waitForTimeout(1800);
+
+  const result = await page.evaluate(() => ({
+    referencePitch: Settings.state.referencePitch,
+    level: L.drone.level,
+    voiceChanged: L.drone.voice !== window.__retuneBefore.voice,
+    sustainChanged: B.root.sus !== window.__retuneBefore.sustain,
+    held: Boolean(B.root.sus),
+    oceanUntouched: L.ocean.voice === window.__retuneBefore.ocean,
+  }));
+  expect(result.referencePitch).toBe(528);
+  expect(result.level).toBeCloseTo(.4, 2);
+  expect(result.voiceChanged).toBe(true);
+  expect(result.sustainChanged).toBe(true);
+  expect(result.held).toBe(true);
+  expect(result.oceanUntouched).toBe(true);
+});
