@@ -9,23 +9,39 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <meta name="theme-color" content="#E6F3F8">
+<script src="settings.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400&family=Karla:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
   --ink:#0F323F; --ink-2:#446B79; --ink-3:#83A2AD;
-  --paper:#F4FAFC; --paper-2:#D8EBF3;
+  --paper:#F4FAFC; --paper-mid:#E6F3F8; --paper-2:#D8EBF3;
   --lagoon:#7CC3D6; --lagoon-2:#3F92AC; --lagoon-3:#276579;
   --shell:rgba(255,255,255,.72);
+  --surface-soft:rgba(255,255,255,.6); --surface-faint:rgba(255,255,255,.55);
+  --column:rgba(39,101,121,.07); --thumb:#fff; --active-text:#fff;
+  --bowl-highlight:rgba(255,255,255,.9); --water-line:rgba(255,255,255,.85);
   --line:rgba(39,101,121,.15);
   --shadow:0 10px 30px rgba(15,50,63,.07);
   --display:"Fraunces",Georgia,serif;
   --body:"Karla",system-ui,-apple-system,"Segoe UI",sans-serif;
 }
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#EAF7FA; --ink-2:#B7D5DE; --ink-3:#82AAB6;
+  --paper:#071C24; --paper-mid:#0B2732; --paper-2:#103845;
+  --lagoon:#6DB6C8; --lagoon-2:#65AEC1; --lagoon-3:#9CD4E0;
+  --shell:rgba(10,35,45,.78);
+  --surface-soft:rgba(15,49,61,.78); --surface-faint:rgba(13,44,55,.72);
+  --column:rgba(124,195,214,.1); --thumb:#EAF7FA; --active-text:#071C24;
+  --bowl-highlight:rgba(224,247,251,.32); --water-line:rgba(234,247,250,.76);
+  --line:rgba(156,212,224,.2);
+  --shadow:0 12px 34px rgba(0,0,0,.24);
+}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;font-family:var(--body);color:var(--ink);min-height:100vh;
-  background:linear-gradient(180deg,var(--paper),#E6F3F8 45%,var(--paper-2));background-attachment:fixed;
+  background:linear-gradient(180deg,var(--paper),var(--paper-mid) 45%,var(--paper-2));background-attachment:fixed;
   -webkit-user-select:none;user-select:none;touch-action:manipulation;
   padding-top:0;
   padding-right:max(clamp(10px,2.2vw,28px),env(safe-area-inset-right));
@@ -37,6 +53,7 @@ h1,h2{font-family:var(--display);font-weight:300;margin:0}
 
 header{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:12px 2px 4px}
 .brand{display:flex;align-items:center;gap:11px;margin-right:auto}
+.brand svg{color:var(--lagoon-2)}
 .brand h1{font-size:clamp(19px,2.1vw,25px);line-height:1.1}
 .brand .sub{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3)}
 .tuning{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--lagoon-3);
@@ -47,13 +64,13 @@ header{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:12px 2px 4
 .seg{display:flex;background:var(--shell);border:1px solid var(--line);border-radius:999px;padding:4px;box-shadow:var(--shadow)}
 .seg button{border:none;background:none;font-family:var(--body);font-size:11px;letter-spacing:.12em;
   text-transform:uppercase;color:var(--ink-2);padding:8px 13px;border-radius:999px;cursor:pointer}
-.seg button.on{background:var(--lagoon-2);color:#fff}
+.seg button.on{background:var(--lagoon-2);color:var(--active-text)}
 input[type=range]{-webkit-appearance:none;appearance:none;width:96px;height:24px;background:transparent;cursor:pointer}
 input[type=range]::-webkit-slider-runnable-track{height:5px;border-radius:99px;background:var(--lagoon);opacity:.6}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;
-  background:#fff;border:1.5px solid var(--lagoon-2);margin-top:-8.5px;box-shadow:0 3px 9px rgba(15,50,63,.18)}
+  background:var(--thumb);border:1.5px solid var(--lagoon-2);margin-top:-8.5px;box-shadow:0 3px 9px rgba(15,50,63,.18)}
 input[type=range]::-moz-range-track{height:5px;border-radius:99px;background:var(--lagoon);opacity:.6}
-input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:1.5px solid var(--lagoon-2)}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--thumb);border:1.5px solid var(--lagoon-2)}
 
 /* ---------- circle ---------- */
 .stage{position:relative;width:min(92vw,58vh,620px);aspect-ratio:1;margin:0 auto}
@@ -72,7 +89,7 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
 @keyframes spread{to{transform:translate(-50%,-50%) scale(3.4);opacity:0}}
 .centre{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
   width:27%;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;text-align:center;
-  background:rgba(255,255,255,.55);border:1px solid var(--line);box-shadow:var(--shadow)}
+  background:var(--surface-faint);border:1px solid var(--line);box-shadow:var(--shadow)}
 .centre .big{font-family:var(--display);font-size:clamp(16px,2vw,23px);display:block;font-variant-numeric:tabular-nums}
 .centre .sm{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);margin-top:4px;display:block}
 
@@ -93,7 +110,7 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
 .recs h2{font-size:18px;margin-bottom:4px}
 .recs p.note{font-size:11.5px;color:var(--ink-3);line-height:1.65;margin:0 0 14px;max-width:78ch}
 .slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
-.slot{border:1px solid var(--line);background:rgba(255,255,255,.6);border-radius:14px;padding:11px 13px}
+.slot{border:1px solid var(--line);background:var(--surface-soft);border-radius:14px;padding:11px 13px}
 .slot .sn{font-family:var(--display);font-size:15px}
 .slot .ss{font-size:10.5px;color:var(--ink-3);margin:3px 0 8px;min-height:1.3em}
 .slot .ss.ok{color:var(--lagoon-3)}
@@ -110,12 +127,12 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
 .strip .cap{font-family:var(--display);font-size:14px;text-align:center;line-height:1.15;min-height:2.3em;
   display:flex;align-items:center;justify-content:center;cursor:pointer}
 .col{position:relative;width:52px;height:clamp(110px,19vh,180px);border-radius:999px;overflow:hidden;
-  background:rgba(39,101,121,.07);border:1px solid var(--line);touch-action:none;cursor:ns-resize}
+  background:var(--column);border:1px solid var(--line);touch-action:none;cursor:ns-resize}
 .col .water{position:absolute;left:0;right:0;bottom:0;height:0%;
   background:linear-gradient(180deg,rgba(124,195,214,.75),rgba(63,146,172,.9))}
-.col .line{position:absolute;left:5px;right:5px;height:2px;background:rgba(255,255,255,.85);border-radius:2px;transform:translateY(50%);bottom:0}
+.col .line{position:absolute;left:5px;right:5px;height:2px;background:var(--water-line);border-radius:2px;transform:translateY(50%);bottom:0}
 .col .pc{position:absolute;left:0;right:0;bottom:7px;text-align:center;font-size:10.5px;color:var(--ink-2);font-variant-numeric:tabular-nums}
-.col.hot .pc{color:#fff}
+.col.hot .pc{color:var(--active-text)}
 .hint{text-align:center;font-size:11.5px;color:var(--ink-3);margin:12px auto 0;line-height:1.7}
 
 @media (max-width:900px), (pointer:coarse) and (max-width:1024px){
@@ -158,7 +175,7 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
 
 <header>
   <div class="brand">
-    <svg width="32" height="32" viewBox="0 0 64 64" fill="none" stroke="#3F92AC" stroke-width="1.6">
+    <svg width="32" height="32" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6">
       <circle cx="32" cy="32" r="30"/><path d="M8 27c5-5 9-5 14 0s9 5 14 0 9-5 14 0" stroke-linecap="round"/>
       <path d="M8 37c5-5 9-5 14 0s9 5 14 0 9-5 14 0" stroke-linecap="round" opacity=".6"/></svg>
     <div><div class="sub">Salty Dog Retreats</div><h1>Tide Ring</h1></div>
@@ -169,6 +186,7 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
   <div class="seg" id="octave"><button data-o="-1">Low</button><button data-o="0" class="on">Mid</button><button data-o="1">High</button></div>
   <div class="seg"><button id="latch">Latch</button></div>
   <div class="seg"><button id="awakeBtn" class="on">Keep awake</button></div>
+  <div class="seg"><button id="themeToggle" type="button" aria-pressed="false">Theme: Light</button></div>
   <div class="seg"><button id="recsBtn">Recordings</button></div>
   <div class="seg"><button id="allOff">Fade all out</button></div>
 </header>
@@ -193,6 +211,17 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
 </div>
 
 <script>
+const Settings=window.TideRingSettings;
+const themeToggle=document.getElementById('themeToggle');
+function syncThemeUI(){
+  const dark=Settings.state.theme==='dark';
+  themeToggle.textContent=dark?'Theme: Dark':'Theme: Light';
+  themeToggle.setAttribute('aria-pressed',String(dark));
+}
+themeToggle.addEventListener('click',()=>Settings.toggleTheme());
+Settings.subscribe(change=>{ if(change==='theme') syncThemeUI(); });
+syncThemeUI();
+
 /* ================= AUDIO CORE ================= */
 let ctx=null,master=null,revBus=null,volDry=null,volWet=null,buffers={},woke=false;
 function ensureAudio(){
@@ -522,7 +551,7 @@ BOWLS.forEach(b=>{
   B[b.id]={sus:null,timer:null};
   const d=document.createElement('div');
   d.className='bowl'; d.id='b-'+b.id; d.setAttribute('role','button'); d.tabIndex=0;
-  d.style.background=`radial-gradient(120% 120% at 32% 24%, rgba(255,255,255,.9), ${b.tint}55)`;
+  d.style.background=`radial-gradient(120% 120% at 32% 24%, var(--bowl-highlight), ${b.tint}55)`;
   d.innerHTML=`<div class="inner"><span class="n">${b.name}</span>
     <span class="k">${b.note}</span><span class="hz" id="f-${b.id}">${Math.round(b.f)} Hz</span></div>`;
   stage.appendChild(d);
