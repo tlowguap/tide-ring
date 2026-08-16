@@ -25,7 +25,7 @@ for (const viewport of viewports) {
       const strips = [...document.querySelectorAll('.strip')].map(el => rect(`#${el.id}`));
       const controls = [...document.querySelectorAll('header > *')].map(el => el.getBoundingClientRect());
       const gongs = [...document.querySelectorAll('.gong')].map(el => el.getBoundingClientRect());
-      const interactiveHeights = [...document.querySelectorAll('.chipbox input[type=range], .seg button, .strip .cap, .slot label, .slot button.clr')]
+      const interactiveHeights = [...document.querySelectorAll('.chipbox input[type=range], .tuning select, .seg button, .strip .cap, .slot label, .slot button.clr')]
         .map(el => el.getBoundingClientRect().height);
       const rangeHeights = [...document.querySelectorAll('.chipbox input[type=range]')]
         .map(el => el.getBoundingClientRect().height);
