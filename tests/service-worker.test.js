@@ -4,5 +4,5 @@ const path = require('node:path');
 
 test('service worker cache is refreshed for responsive release', () => {
   const source = fs.readFileSync(path.join(__dirname, '..', 'sw.js'), 'utf8');
-  expect(source).toContain("const CACHE = 'tide-ring-v2'");
+  expect(source).toContain("const CACHE = 'tide-ring-v3'");
 });
