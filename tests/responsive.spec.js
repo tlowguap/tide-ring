@@ -11,6 +11,7 @@ for (const viewport of viewports) {
   test(`${viewport.name} layout stays usable`, async ({ page }) => {
     await page.setViewportSize(viewport);
     await page.goto('/');
+    await page.locator('#recsBtn').click();
 
     const geometry = await page.evaluate(() => {
       const rect = selector => document.querySelector(selector).getBoundingClientRect();
@@ -19,7 +20,7 @@ for (const viewport of viewports) {
       const strips = [...document.querySelectorAll('.strip')].map(el => rect(`#${el.id}`));
       const controls = [...document.querySelectorAll('header > *')].map(el => el.getBoundingClientRect());
       const gongs = [...document.querySelectorAll('.gong')].map(el => el.getBoundingClientRect());
-      const interactiveHeights = [...document.querySelectorAll('.chipbox input[type=range], .seg button, .strip .cap')]
+      const interactiveHeights = [...document.querySelectorAll('.chipbox input[type=range], .seg button, .strip .cap, .slot label, .slot button.clr')]
         .map(el => el.getBoundingClientRect().height);
       const firstStripStyle = getComputedStyle(document.querySelector('.strip'));
 
