@@ -27,7 +27,11 @@
 body{margin:0;font-family:var(--body);color:var(--ink);min-height:100vh;
   background:linear-gradient(180deg,var(--paper),#E6F3F8 45%,var(--paper-2));background-attachment:fixed;
   -webkit-user-select:none;user-select:none;touch-action:manipulation;
-  padding:0 clamp(10px,2.2vw,28px) 24px;overflow-x:hidden}
+  padding-top:0;
+  padding-right:max(clamp(10px,2.2vw,28px),env(safe-area-inset-right));
+  padding-bottom:calc(24px + env(safe-area-inset-bottom));
+  padding-left:max(clamp(10px,2.2vw,28px),env(safe-area-inset-left));
+  overflow-x:hidden}
 h1,h2{font-family:var(--display);font-weight:300;margin:0}
 .wrap{max-width:1280px;margin:0 auto}
 
@@ -113,6 +117,35 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
 .col .pc{position:absolute;left:0;right:0;bottom:7px;text-align:center;font-size:10.5px;color:var(--ink-2);font-variant-numeric:tabular-nums}
 .col.hot .pc{color:#fff}
 .hint{text-align:center;font-size:11.5px;color:var(--ink-3);margin:12px auto 0;line-height:1.7}
+
+@media (max-width:900px){
+  header{gap:8px}
+  .stage{width:min(100%,58vh,560px)}
+  .console{gap:8px}
+  .strip{min-width:0}
+  .col{width:48px}
+}
+
+@media (max-width:600px){
+  body{padding-bottom:calc(16px + env(safe-area-inset-bottom))}
+  header{padding-top:8px;align-items:stretch}
+  .brand{flex:1 1 calc(100% - 112px);min-width:190px}
+  .tuning{align-self:center;padding:7px 10px}
+  .chipbox{flex:1 1 calc(50% - 4px);justify-content:space-between;min-width:0;min-height:44px;padding:5px 10px}
+  .chipbox input[type=range]{width:clamp(72px,24vw,104px)}
+  .seg{flex:1 1 auto;justify-content:center}
+  .seg button{min-height:44px;padding:8px 10px}
+  .stage{width:min(100%,55vh,430px)}
+  .strikes{flex-wrap:nowrap;gap:6px}
+  .gong{flex:1 1 0;min-width:0;min-height:48px;padding:8px 5px;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+  .gong .t{font-size:14px}
+  .gong .h{font-size:9px}
+  .slots{grid-template-columns:1fr}
+  .console{gap:6px;padding:12px 10px;scroll-snap-type:x proximity;scroll-padding-inline:10px;-webkit-overflow-scrolling:touch;box-shadow:inset -18px 0 18px -18px rgba(39,101,121,.4),var(--shadow)}
+  .strip{flex:0 0 72px;min-width:72px;scroll-snap-align:start}
+  .col{width:50px;height:clamp(124px,21vh,170px)}
+  .hint{font-size:11px;line-height:1.55}
+}
 </style>
 </head>
 <body>
