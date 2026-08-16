@@ -2,10 +2,11 @@
    Bump CACHE when you change any file, otherwise returning devices keep the
    old copy. Everything is cache-first: once installed the app never needs
    the network, which is the point — retreat venues have bad wifi. */
-const CACHE = 'tide-ring-v3';
+const CACHE = 'tide-ring-v4';
 const ASSETS = [
   './',
   'index.html',
+  'settings.js',
   'manifest.webmanifest',
   'audio/deep-gong.mp3',
   'audio/temple-gong.mp3',

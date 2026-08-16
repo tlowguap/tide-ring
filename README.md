@@ -1,6 +1,6 @@
 # Tide Ring
 
-A live sound-healing instrument for Salty Dog Retreats. Seven singing bowls tuned to A = 432 Hz, three real gong recordings, and a continuous ambience bed. Built to sit on an iPad beside the practitioner during a session.
+A live sound-healing instrument for Salty Dog Retreats. Seven singing bowls with selectable A = 432 Hz and A = 528 Hz tunings, three real gong recordings, and a continuous ambience bed. Built to sit on an iPad beside the practitioner during a session.
 
 No build step, no dependencies, no server code. It is plain HTML, CSS and JavaScript.
 
@@ -33,6 +33,7 @@ Replace the changed files in the repository, **and bump the version string at th
 | File | Purpose |
 |---|---|
 | `index.html` | The whole app — markup, styles, audio engine |
+| `settings.js` | Persistent light/dark theme and tuning preferences |
 | `audio/` | The four recordings: three gongs and the wind chime bed |
 | `icons/` | Home-screen and PWA icons |
 | `manifest.webmanifest` | Makes it installable as an app |
@@ -64,7 +65,9 @@ The only requirement is that it is served over `http://` or `https://`. The serv
 
 **Fonts.** Fraunces and Karla load from Google Fonts. The service worker caches them after the first visit, so offline use is fine once it has run online at least once. For guaranteed offline fidelity from a cold start, download the two `woff2` files, put them in a `fonts/` folder, replace the `<link>` in `index.html` with `@font-face` rules, and add the files to the `ASSETS` list in `sw.js`.
 
-**Audio.** Everything except the four recordings is synthesised live in the Web Audio API — ocean, rain, koshi chimes, temple bells, earth drone and the theta binaural beat. Nothing loops except the wind chime bed, which is crossfaded end-to-start so the 95-second cycle has no audible seam. All pitched material derives from a single `A432` constant; change it in one place to retune the whole app.
+**Appearance and tuning.** The app follows the device's light or dark appearance until the header toggle is used. Both the manual appearance and tuning choice are remembered on that device. A = 432 Hz and A = 528 Hz use the same equal-temperament intervals.
+
+**Audio.** Everything except the four recordings is synthesised live in the Web Audio API — ocean, rain, koshi chimes, temple bells, earth drone and the theta binaural beat. Nothing loops except the wind chime bed, which is crossfaded end-to-start so the 95-second cycle has no audible seam. In A = 528 Hz mode, recorded gongs and wind chimes play at `528 / 432` (about 1.2222×), so they sound brighter, faster, and shorter. Changing tuning during a session smoothly rebuilds active pitched sounds; ocean and rain continue uninterrupted.
 
 **Screen sleep.** The app takes a screen wake lock and re-takes it every time the page returns to the foreground, with a muted-video fallback for iOS below 16.4. The **Keep awake** button in the header shows whether it is actually holding. Also set the iPad's Auto-Lock to Never as a backstop.
 
